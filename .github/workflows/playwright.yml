@@ -1,5 +1,4 @@
-name: Playwright Tests
-
+name: Playwright Tests with Allure
 on:
   push:
     branches: [main, master]
@@ -10,27 +9,34 @@ jobs:
   test:
     timeout-minutes: 60
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      - name: Set Up Node.js
+        uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: "18"
 
-      - name: Install dependencies
+      - name: Install Dependencies
         run: npm ci
 
       - name: Install Playwright Browsers
         run: npx playwright install --with-deps
 
       - name: Run Playwright tests
-        run: npx playwright test
+        run: npx playwright test --reporter=allure-playwright
 
-      - name: Upload Allure Reports 
+      - name: Generate Allure Reports
+        run: |
+          npm install -g allure-commandline
+          npx allure generate ./allure-results 
+
+      - name: Upload Allure Reports
         uses: actions/upload-artifact@v3
         if: always()
         with:
           name: allure-report
           path: allure-report
           retention-days: 30
+ 
