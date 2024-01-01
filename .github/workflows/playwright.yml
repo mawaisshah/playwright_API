@@ -31,6 +31,6 @@ jobs:
         uses: actions/upload-artifact@v3
         if: always()
         with:
-          name: allure-reports
-          path: allure-report/
+          name: allure-report
+          path: allure-report
           retention-days: 30
